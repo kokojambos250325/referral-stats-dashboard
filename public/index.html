@@ -489,11 +489,22 @@
             };
             
             document.getElementById('usersCount').textContent = data.usersCount;
-            document.getElementById('inProgress').textContent = filteredTotal.inProgress;
-            document.getElementById('finished').textContent = filteredTotal.finished;
-            document.getElementById('cancelled').textContent = filteredTotal.cancelled;
-            document.getElementById('validation').textContent = filteredTotal.validation;
-            document.getElementById('screenshotApproval').textContent = filteredTotal.screenshotApproval;
+            
+            // Calculate total tasks for percentages
+            const totalTasks = filteredTotal.finished + filteredTotal.cancelled + filteredTotal.inProgress + filteredTotal.validation + filteredTotal.screenshotApproval;
+            
+            // Display counts with percentages
+            const inProgressPercent = totalTasks > 0 ? ((filteredTotal.inProgress / totalTasks) * 100).toFixed(1) : 0;
+            const finishedPercent = totalTasks > 0 ? ((filteredTotal.finished / totalTasks) * 100).toFixed(1) : 0;
+            const cancelledPercent = totalTasks > 0 ? ((filteredTotal.cancelled / totalTasks) * 100).toFixed(1) : 0;
+            const validationPercent = totalTasks > 0 ? ((filteredTotal.validation / totalTasks) * 100).toFixed(1) : 0;
+            const screenshotPercent = totalTasks > 0 ? ((filteredTotal.screenshotApproval / totalTasks) * 100).toFixed(1) : 0;
+            
+            document.getElementById('inProgress').innerHTML = `${filteredTotal.inProgress}<span class="text-sm font-normal ml-2 opacity-70">(${inProgressPercent}%)</span>`;
+            document.getElementById('finished').innerHTML = `${filteredTotal.finished}<span class="text-sm font-normal ml-2 opacity-70">(${finishedPercent}%)</span>`;
+            document.getElementById('cancelled').innerHTML = `${filteredTotal.cancelled}<span class="text-sm font-normal ml-2 opacity-70">(${cancelledPercent}%)</span>`;
+            document.getElementById('validation').innerHTML = `${filteredTotal.validation}<span class="text-sm font-normal ml-2 opacity-70">(${validationPercent}%)</span>`;
+            document.getElementById('screenshotApproval').innerHTML = `${filteredTotal.screenshotApproval}<span class="text-sm font-normal ml-2 opacity-70">(${screenshotPercent}%)</span>`;
             
             // Calculate Conversion Rate
             const conversionRate = data.usersCount > 0 
@@ -573,8 +584,7 @@
 
             const pieCtx = document.getElementById('pieChart').getContext('2d');
             
-            // Calculate total and percentages
-            const totalTasks = filteredTotal.finished + filteredTotal.cancelled + filteredTotal.inProgress + filteredTotal.validation + filteredTotal.screenshotApproval;
+            // Calculate percentages for pie chart
             const percentages = [
                 totalTasks > 0 ? ((filteredTotal.finished / totalTasks) * 100).toFixed(1) : 0,
                 totalTasks > 0 ? ((filteredTotal.cancelled / totalTasks) * 100).toFixed(1) : 0,
