@@ -488,14 +488,17 @@
                 screenshotApproval: filteredStats.reduce((sum, s) => sum + s.screenshotApproval, 0)
             };
             
-            document.getElementById('usersCount').textContent = data.usersCount;
+            // Fixed total users value
+            const TOTAL_USERS = 50;
             
-            // Calculate percentages based on total users
-            const inProgressPercent = data.usersCount > 0 ? ((filteredTotal.inProgress / data.usersCount) * 100).toFixed(2) : '0.00';
-            const finishedPercent = data.usersCount > 0 ? ((filteredTotal.finished / data.usersCount) * 100).toFixed(2) : '0.00';
-            const cancelledPercent = data.usersCount > 0 ? ((filteredTotal.cancelled / data.usersCount) * 100).toFixed(2) : '0.00';
-            const validationPercent = data.usersCount > 0 ? ((filteredTotal.validation / data.usersCount) * 100).toFixed(2) : '0.00';
-            const screenshotPercent = data.usersCount > 0 ? ((filteredTotal.screenshotApproval / data.usersCount) * 100).toFixed(2) : '0.00';
+            document.getElementById('usersCount').textContent = TOTAL_USERS;
+            
+            // Calculate percentages based on fixed total users (50)
+            const inProgressPercent = ((filteredTotal.inProgress / TOTAL_USERS) * 100).toFixed(2);
+            const finishedPercent = ((filteredTotal.finished / TOTAL_USERS) * 100).toFixed(2);
+            const cancelledPercent = ((filteredTotal.cancelled / TOTAL_USERS) * 100).toFixed(2);
+            const validationPercent = ((filteredTotal.validation / TOTAL_USERS) * 100).toFixed(2);
+            const screenshotPercent = ((filteredTotal.screenshotApproval / TOTAL_USERS) * 100).toFixed(2);
             
             document.getElementById('inProgress').innerHTML = `${filteredTotal.inProgress}<span class="text-sm font-normal ml-2 opacity-70">${inProgressPercent}%</span>`;
             document.getElementById('finished').innerHTML = `${filteredTotal.finished}<span class="text-sm font-normal ml-2 opacity-70">${finishedPercent}%</span>`;
@@ -503,17 +506,15 @@
             document.getElementById('validation').innerHTML = `${filteredTotal.validation}<span class="text-sm font-normal ml-2 opacity-70">${validationPercent}%</span>`;
             document.getElementById('screenshotApproval').innerHTML = `${filteredTotal.screenshotApproval}<span class="text-sm font-normal ml-2 opacity-70">${screenshotPercent}%</span>`;
             
-            // Calculate Conversion Rate
-            const conversionRate = data.usersCount > 0 
-                ? ((filteredTotal.finished / data.usersCount) * 100).toFixed(2) + '%'
-                : '0%';
+            // Calculate Conversion Rate (based on fixed 50 users)
+            const conversionRate = ((filteredTotal.finished / TOTAL_USERS) * 100).toFixed(2) + '%';
             document.getElementById('conversionRate').textContent = conversionRate;
             
-            // Calculate CPA
+            // Calculate CPA (based on fixed 50 users)
             const userCost = parseFloat(document.getElementById('userCost').value) || 0;
-            const totalCost = data.usersCount * userCost;
+            const totalCost = TOTAL_USERS * userCost;
             const revenue = filteredTotal.finished * 1; // $1 per finished task
-            const cpa = totalCost > 0 ? ((totalCost - revenue) / data.usersCount).toFixed(2) : '0.00';
+            const cpa = ((totalCost - revenue) / TOTAL_USERS).toFixed(2);
             document.getElementById('cpaValue').textContent = '$' + cpa;
 
             const dates = filteredStats.map(s => new Date(s.date).toLocaleDateString());
