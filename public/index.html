@@ -488,9 +488,6 @@
                 screenshotApproval: filteredStats.reduce((sum, s) => sum + s.screenshotApproval, 0)
             };
             
-            // Fixed total users value for Conversion Rate calculation
-            const TOTAL_USERS = 50;
-            
             // Display actual users count from API
             document.getElementById('usersCount').textContent = data.usersCount;
             
@@ -510,15 +507,19 @@
             document.getElementById('validation').innerHTML = `${filteredTotal.validation}<span class="text-sm font-normal ml-2 opacity-70">${validationPercent}%</span>`;
             document.getElementById('screenshotApproval').innerHTML = `${filteredTotal.screenshotApproval}<span class="text-sm font-normal ml-2 opacity-70">${screenshotPercent}%</span>`;
             
-            // Calculate Conversion Rate (based on fixed 50 users)
-            const conversionRate = ((filteredTotal.finished / TOTAL_USERS) * 100).toFixed(2) + '%';
+            // Calculate Conversion Rate (based on actual users count)
+            const conversionRate = data.usersCount > 0
+                ? ((filteredTotal.finished / data.usersCount) * 100).toFixed(2) + '%'
+                : '0.00%';
             document.getElementById('conversionRate').textContent = conversionRate;
             
-            // Calculate CPA (based on fixed 50 users)
+            // Calculate CPA (based on actual users count)
             const userCost = parseFloat(document.getElementById('userCost').value) || 0;
-            const totalCost = TOTAL_USERS * userCost;
+            const totalCost = data.usersCount * userCost;
             const revenue = filteredTotal.finished * 1; // $1 per finished task
-            const cpa = ((totalCost - revenue) / TOTAL_USERS).toFixed(2);
+            const cpa = data.usersCount > 0
+                ? ((totalCost - revenue) / data.usersCount).toFixed(2)
+                : '0.00';
             document.getElementById('cpaValue').textContent = '$' + cpa;
 
             const dates = filteredStats.map(s => new Date(s.date).toLocaleDateString());
