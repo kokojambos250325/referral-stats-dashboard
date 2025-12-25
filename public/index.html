@@ -490,21 +490,18 @@
             
             document.getElementById('usersCount').textContent = data.usersCount;
             
-            // Calculate total tasks for percentages
-            const totalTasks = filteredTotal.finished + filteredTotal.cancelled + filteredTotal.inProgress + filteredTotal.validation + filteredTotal.screenshotApproval;
+            // Calculate percentages based on total users
+            const inProgressPercent = data.usersCount > 0 ? ((filteredTotal.inProgress / data.usersCount) * 100).toFixed(2) : '0.00';
+            const finishedPercent = data.usersCount > 0 ? ((filteredTotal.finished / data.usersCount) * 100).toFixed(2) : '0.00';
+            const cancelledPercent = data.usersCount > 0 ? ((filteredTotal.cancelled / data.usersCount) * 100).toFixed(2) : '0.00';
+            const validationPercent = data.usersCount > 0 ? ((filteredTotal.validation / data.usersCount) * 100).toFixed(2) : '0.00';
+            const screenshotPercent = data.usersCount > 0 ? ((filteredTotal.screenshotApproval / data.usersCount) * 100).toFixed(2) : '0.00';
             
-            // Display counts with percentages
-            const inProgressPercent = totalTasks > 0 ? ((filteredTotal.inProgress / totalTasks) * 100).toFixed(1) : 0;
-            const finishedPercent = totalTasks > 0 ? ((filteredTotal.finished / totalTasks) * 100).toFixed(1) : 0;
-            const cancelledPercent = totalTasks > 0 ? ((filteredTotal.cancelled / totalTasks) * 100).toFixed(1) : 0;
-            const validationPercent = totalTasks > 0 ? ((filteredTotal.validation / totalTasks) * 100).toFixed(1) : 0;
-            const screenshotPercent = totalTasks > 0 ? ((filteredTotal.screenshotApproval / totalTasks) * 100).toFixed(1) : 0;
-            
-            document.getElementById('inProgress').innerHTML = `${filteredTotal.inProgress}<span class="text-sm font-normal ml-2 opacity-70">(${inProgressPercent}%)</span>`;
-            document.getElementById('finished').innerHTML = `${filteredTotal.finished}<span class="text-sm font-normal ml-2 opacity-70">(${finishedPercent}%)</span>`;
-            document.getElementById('cancelled').innerHTML = `${filteredTotal.cancelled}<span class="text-sm font-normal ml-2 opacity-70">(${cancelledPercent}%)</span>`;
-            document.getElementById('validation').innerHTML = `${filteredTotal.validation}<span class="text-sm font-normal ml-2 opacity-70">(${validationPercent}%)</span>`;
-            document.getElementById('screenshotApproval').innerHTML = `${filteredTotal.screenshotApproval}<span class="text-sm font-normal ml-2 opacity-70">(${screenshotPercent}%)</span>`;
+            document.getElementById('inProgress').innerHTML = `${filteredTotal.inProgress}<span class="text-sm font-normal ml-2 opacity-70">${inProgressPercent}%</span>`;
+            document.getElementById('finished').innerHTML = `${filteredTotal.finished}<span class="text-sm font-normal ml-2 opacity-70">${finishedPercent}%</span>`;
+            document.getElementById('cancelled').innerHTML = `${filteredTotal.cancelled}<span class="text-sm font-normal ml-2 opacity-70">${cancelledPercent}%</span>`;
+            document.getElementById('validation').innerHTML = `${filteredTotal.validation}<span class="text-sm font-normal ml-2 opacity-70">${validationPercent}%</span>`;
+            document.getElementById('screenshotApproval').innerHTML = `${filteredTotal.screenshotApproval}<span class="text-sm font-normal ml-2 opacity-70">${screenshotPercent}%</span>`;
             
             // Calculate Conversion Rate
             const conversionRate = data.usersCount > 0 
