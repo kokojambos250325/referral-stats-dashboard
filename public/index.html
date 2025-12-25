@@ -515,9 +515,12 @@
             
             // Calculate CPA (total cost - revenue)
             const userCost = parseFloat(document.getElementById('userCost').value) || 0;
-            const totalCost = data.usersCount * userCost;
-            const revenue = filteredTotal.finished * 1; // $1 per finished task
-            const cpa = (totalCost - revenue).toFixed(2);
+            let cpa = '0.00';
+            if (userCost > 0) {
+                const totalCost = data.usersCount * userCost;
+                const revenue = filteredTotal.finished * 1; // $1 per finished task
+                cpa = (totalCost - revenue).toFixed(2);
+            }
             document.getElementById('cpaValue').textContent = '$' + cpa;
 
             const dates = filteredStats.map(s => new Date(s.date).toLocaleDateString());
