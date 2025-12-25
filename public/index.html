@@ -107,6 +107,11 @@
         .flatpickr-months .flatpickr-next-month:hover {
             color: hsl(215 20.2% 65.1%);
         }
+        /* Hide days from other months */
+        .flatpickr-day.prevMonthDay,
+        .flatpickr-day.nextMonthDay {
+            display: none !important;
+        }
     </style>
 </head>
 <body class="min-h-screen bg-background text-foreground antialiased">
