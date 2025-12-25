@@ -56,16 +56,22 @@
             background: hsl(222.2 84% 4.9%);
         }
         .flatpickr-current-month .flatpickr-monthDropdown-months {
-            background: hsl(222.2 84% 4.9%);
-            color: hsl(210 40% 98%);
+            background: hsl(222.2 84% 4.9%) !important;
+            color: hsl(210 40% 98%) !important;
         }
         .flatpickr-current-month input.cur-year {
-            color: hsl(210 40% 98%);
+            color: hsl(210 40% 98%) !important;
         }
         /* Dropdown months - fix white text on white */
         .flatpickr-monthDropdown-months option {
-            background: hsl(222.2 84% 4.9%);
-            color: hsl(210 40% 98%);
+            background: hsl(222.2 84% 4.9%) !important;
+            color: hsl(210 40% 98%) !important;
+        }
+        .flatpickr-monthDropdown-months:hover,
+        .flatpickr-monthDropdown-months:focus,
+        .flatpickr-monthDropdown-months:active {
+            background: hsl(222.2 84% 4.9%) !important;
+            color: hsl(210 40% 98%) !important;
         }
         .flatpickr-weekday {
             color: hsl(215 20.2% 65.1%);
@@ -355,8 +361,14 @@
             }
             
             flatpickrInstance = flatpickr('#dateFilter', {
-                enable: availableDates, // Только эти даты доступны
                 dateFormat: 'Y-m-d',
+                disable: [
+                    function(date) {
+                        // Disable all dates except those in availableDates
+                        const dateStr = date.toISOString().split('T')[0];
+                        return !availableDates.includes(dateStr);
+                    }
+                ],
                 locale: {
                     firstDayOfWeek: 1,
                     weekdays: {
