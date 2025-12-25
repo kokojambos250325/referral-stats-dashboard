@@ -513,13 +513,11 @@
                 : '0.00%';
             document.getElementById('conversionRate').textContent = conversionRate;
             
-            // Calculate CPA (based on actual users count)
+            // Calculate CPA (total cost - revenue)
             const userCost = parseFloat(document.getElementById('userCost').value) || 0;
             const totalCost = data.usersCount * userCost;
             const revenue = filteredTotal.finished * 1; // $1 per finished task
-            const cpa = data.usersCount > 0
-                ? ((totalCost - revenue) / data.usersCount).toFixed(2)
-                : '0.00';
+            const cpa = (totalCost - revenue).toFixed(2);
             document.getElementById('cpaValue').textContent = '$' + cpa;
 
             const dates = filteredStats.map(s => new Date(s.date).toLocaleDateString());
