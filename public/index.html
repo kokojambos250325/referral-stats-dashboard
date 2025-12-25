@@ -493,12 +493,15 @@
             
             document.getElementById('usersCount').textContent = TOTAL_USERS;
             
-            // Calculate percentages based on fixed total users (50)
-            const inProgressPercent = ((filteredTotal.inProgress / TOTAL_USERS) * 100).toFixed(2);
-            const finishedPercent = ((filteredTotal.finished / TOTAL_USERS) * 100).toFixed(2);
-            const cancelledPercent = ((filteredTotal.cancelled / TOTAL_USERS) * 100).toFixed(2);
-            const validationPercent = ((filteredTotal.validation / TOTAL_USERS) * 100).toFixed(2);
-            const screenshotPercent = ((filteredTotal.screenshotApproval / TOTAL_USERS) * 100).toFixed(2);
+            // Calculate total tasks for status percentages
+            const totalTasks = filteredTotal.finished + filteredTotal.cancelled + filteredTotal.inProgress + filteredTotal.validation + filteredTotal.screenshotApproval;
+            
+            // Calculate percentages based on total tasks
+            const inProgressPercent = totalTasks > 0 ? ((filteredTotal.inProgress / totalTasks) * 100).toFixed(2) : '0.00';
+            const finishedPercent = totalTasks > 0 ? ((filteredTotal.finished / totalTasks) * 100).toFixed(2) : '0.00';
+            const cancelledPercent = totalTasks > 0 ? ((filteredTotal.cancelled / totalTasks) * 100).toFixed(2) : '0.00';
+            const validationPercent = totalTasks > 0 ? ((filteredTotal.validation / totalTasks) * 100).toFixed(2) : '0.00';
+            const screenshotPercent = totalTasks > 0 ? ((filteredTotal.screenshotApproval / totalTasks) * 100).toFixed(2) : '0.00';
             
             document.getElementById('inProgress').innerHTML = `${filteredTotal.inProgress}<span class="text-sm font-normal ml-2 opacity-70">${inProgressPercent}%</span>`;
             document.getElementById('finished').innerHTML = `${filteredTotal.finished}<span class="text-sm font-normal ml-2 opacity-70">${finishedPercent}%</span>`;
@@ -582,10 +585,7 @@
 
             const pieCtx = document.getElementById('pieChart').getContext('2d');
             
-            // Calculate total tasks for pie chart percentages
-            const totalTasks = filteredTotal.finished + filteredTotal.cancelled + filteredTotal.inProgress + filteredTotal.validation + filteredTotal.screenshotApproval;
-            
-            // Calculate percentages for pie chart
+            // Calculate percentages for pie chart (reuse totalTasks from above)
             const percentages = [
                 totalTasks > 0 ? ((filteredTotal.finished / totalTasks) * 100).toFixed(1) : 0,
                 totalTasks > 0 ? ((filteredTotal.cancelled / totalTasks) * 100).toFixed(1) : 0,
