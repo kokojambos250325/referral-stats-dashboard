@@ -488,10 +488,11 @@
                 screenshotApproval: filteredStats.reduce((sum, s) => sum + s.screenshotApproval, 0)
             };
             
-            // Fixed total users value
+            // Fixed total users value for Conversion Rate calculation
             const TOTAL_USERS = 50;
             
-            document.getElementById('usersCount').textContent = TOTAL_USERS;
+            // Display actual users count from API
+            document.getElementById('usersCount').textContent = data.usersCount;
             
             // Calculate total tasks for status percentages
             const totalTasks = filteredTotal.finished + filteredTotal.cancelled + filteredTotal.inProgress + filteredTotal.validation + filteredTotal.screenshotApproval;
