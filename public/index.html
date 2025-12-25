@@ -362,13 +362,8 @@
             
             flatpickrInstance = flatpickr('#dateFilter', {
                 dateFormat: 'Y-m-d',
-                disable: [
-                    function(date) {
-                        // Disable all dates except those in availableDates
-                        const dateStr = date.toISOString().split('T')[0];
-                        return !availableDates.includes(dateStr);
-                    }
-                ],
+                mode: 'single',
+                enable: availableDates,
                 locale: {
                     firstDayOfWeek: 1,
                     weekdays: {
@@ -381,7 +376,11 @@
                     }
                 },
                 allowInput: false,
-                clickOpens: true
+                clickOpens: true,
+                onReady: function(selectedDates, dateStr, instance) {
+                    // Force calendar refresh to fix day count rendering
+                    setTimeout(() => instance.redraw(), 0);
+                }
             });
             
             const filteredTotal = {
