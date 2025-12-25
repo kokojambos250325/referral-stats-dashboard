@@ -581,6 +581,9 @@
 
             const pieCtx = document.getElementById('pieChart').getContext('2d');
             
+            // Calculate total tasks for pie chart percentages
+            const totalTasks = filteredTotal.finished + filteredTotal.cancelled + filteredTotal.inProgress + filteredTotal.validation + filteredTotal.screenshotApproval;
+            
             // Calculate percentages for pie chart
             const percentages = [
                 totalTasks > 0 ? ((filteredTotal.finished / totalTasks) * 100).toFixed(1) : 0,
