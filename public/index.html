@@ -114,6 +114,38 @@
             opacity: 0.15 !important;
             cursor: not-allowed !important;
         }
+        /* Calendar action buttons */
+        .flatpickr-calendar .flatpickr-buttons {
+            display: flex;
+            gap: 8px;
+            padding: 10px;
+            border-top: 1px solid hsl(217.2 32.6% 17.5%);
+            background: hsl(222.2 84% 4.9%);
+        }
+        .flatpickr-calendar .flatpickr-buttons button {
+            flex: 1;
+            padding: 8px 16px;
+            border-radius: 6px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            border: 1px solid hsl(217.2 32.6% 17.5%);
+            transition: all 0.2s;
+        }
+        .flatpickr-calendar .flatpickr-buttons .btn-clear {
+            background: hsl(217.2 32.6% 17.5%);
+            color: hsl(210 40% 98%);
+        }
+        .flatpickr-calendar .flatpickr-buttons .btn-clear:hover {
+            background: hsl(217.2 32.6% 22%);
+        }
+        .flatpickr-calendar .flatpickr-buttons .btn-apply {
+            background: hsl(210 40% 98%);
+            color: hsl(222.2 47.4% 11.2%);
+        }
+        .flatpickr-calendar .flatpickr-buttons .btn-apply:hover {
+            background: hsl(210 40% 90%);
+        }
     </style>
 </head>
 <body class="min-h-screen bg-background text-foreground antialiased">
@@ -238,7 +270,9 @@
                 chartCancelled: 'Отменено',
                 chartInProgress: 'В процессе',
                 chartValidation: 'Валидация',
-                chartScreenshot: 'Одобрение скриншота'
+                chartScreenshot: 'Одобрение скриншота',
+                btnClear: 'Сброс',
+                btnApply: 'Применить'
             },
             en: {
                 pageTitle: '📊 Referral Statistics Dashboard',
@@ -263,7 +297,9 @@
                 chartCancelled: 'Cancelled',
                 chartInProgress: 'In Progress',
                 chartValidation: 'Validation',
-                chartScreenshot: 'Screenshot Approval'
+                chartScreenshot: 'Screenshot Approval',
+                btnClear: 'Clear',
+                btnApply: 'Apply'
             }
         };
 
@@ -387,6 +423,39 @@
                 onReady: function(selectedDates, dateStr, instance) {
                     // Force calendar refresh to fix day count rendering
                     setTimeout(() => instance.redraw(), 0);
+                    
+                    // Add custom buttons
+                    const calendar = instance.calendarContainer;
+                    const buttonsDiv = document.createElement('div');
+                    buttonsDiv.className = 'flatpickr-buttons';
+                    
+                    const t = translations[currentLang];
+                    
+                    // Clear button
+                    const clearBtn = document.createElement('button');
+                    clearBtn.className = 'btn-clear';
+                    clearBtn.textContent = t.btnClear;
+                    clearBtn.type = 'button';
+                    clearBtn.onclick = function(e) {
+                        e.preventDefault();
+                        instance.clear();
+                        loadData();
+                    };
+                    
+                    // Apply button
+                    const applyBtn = document.createElement('button');
+                    applyBtn.className = 'btn-apply';
+                    applyBtn.textContent = t.btnApply;
+                    applyBtn.type = 'button';
+                    applyBtn.onclick = function(e) {
+                        e.preventDefault();
+                        instance.close();
+                        loadData();
+                    };
+                    
+                    buttonsDiv.appendChild(clearBtn);
+                    buttonsDiv.appendChild(applyBtn);
+                    calendar.appendChild(buttonsDiv);
                 }
             });
             
