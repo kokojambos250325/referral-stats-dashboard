@@ -43,12 +43,6 @@
             }
         }
     </script>
-    <style>
-        input[type="date"]::-webkit-calendar-picker-indicator {
-            filter: invert(1);
-            cursor: pointer;
-        }
-    </style>
 </head>
 <body class="min-h-screen bg-background text-foreground antialiased">
     <div class="container mx-auto p-6 max-w-7xl">
@@ -74,7 +68,9 @@
             <div class="flex flex-col space-y-1.5">
                 <label id="labelDateFilter" class="text-sm font-medium leading-none">Фильтр по дате</label>
                 <div class="flex gap-2">
-                    <input type="date" id="dateFilter" class="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring">
+                    <select id="dateFilter" class="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring">
+                        <option value="">Все даты</option>
+                    </select>
                     <button id="btnLoad" onclick="loadData()" class="inline-flex items-center justify-center rounded-md text-sm font-medium h-10 px-4 bg-primary text-primary-foreground hover:bg-primary/90 whitespace-nowrap">
                         🔄 <span id="btnLoadText" class="ml-1">Загрузить</span>
                     </button>
@@ -289,13 +285,27 @@
         function displayData(data, filteredStats) {
             document.getElementById('stats').classList.remove('hidden');
             
-            // Set date picker min/max based on available dates
-            const allDates = data.tasksStatistics.map(s => s.date.split('T')[0]);
-            if (allDates.length > 0) {
-                const minDate = allDates.reduce((a, b) => a < b ? a : b);
-                const maxDate = allDates.reduce((a, b) => a > b ? a : b);
-                document.getElementById('dateFilter').setAttribute('min', minDate);
-                document.getElementById('dateFilter').setAttribute('max', maxDate);
+            // Populate date filter with available dates
+            const dateFilter = document.getElementById('dateFilter');
+            const currentValue = dateFilter.value;
+            dateFilter.innerHTML = '<option value="">' + (currentLang === 'ru' ? 'Все даты' : 'All dates') + '</option>';
+            
+            const allDates = data.tasksStatistics
+                .map(s => s.date.split('T')[0])
+                .sort()
+                .reverse(); // Новые даты сверху
+            
+            allDates.forEach(date => {
+                const option = document.createElement('option');
+                option.value = date;
+                const dateObj = new Date(date + 'T00:00:00');
+                option.textContent = dateObj.toLocaleDateString(currentLang === 'ru' ? 'ru-RU' : 'en-US');
+                dateFilter.appendChild(option);
+            });
+            
+            // Restore selected value if it exists
+            if (currentValue && allDates.includes(currentValue)) {
+                dateFilter.value = currentValue;
             }
             
             const filteredTotal = {
