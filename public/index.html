@@ -160,7 +160,7 @@
         </div>
 
         <!-- Controls -->
-        <div class="grid gap-4 md:grid-cols-3 mb-8">
+        <div class="grid gap-4 md:grid-cols-4 mb-8">
             <div class="flex flex-col space-y-1.5">
                 <label id="labelApiKey" class="text-sm font-medium leading-none">API Key</label>
                 <input type="text" id="apiKey" class="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2" placeholder="Enter API key">
@@ -168,6 +168,10 @@
             <div class="flex flex-col space-y-1.5">
                 <label id="labelRefCode" class="text-sm font-medium leading-none">Реферальный код</label>
                 <input type="text" id="refCode" class="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring" placeholder="Enter referral code">
+            </div>
+            <div class="flex flex-col space-y-1.5">
+                <label id="labelUserCost" class="text-sm font-medium leading-none">Стоимость пользователя ($)</label>
+                <input type="number" id="userCost" class="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring" placeholder="0.00" step="0.01" min="0" onchange="loadData()">
             </div>
             <div class="flex flex-col space-y-1.5">
                 <label id="labelDateFilter" class="text-sm font-medium leading-none">Фильтр по дате</label>
@@ -189,7 +193,7 @@
         <!-- Stats -->
         <div id="stats" class="hidden space-y-6">
             <!-- Stats Grid -->
-            <div class="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+            <div class="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
                 <div class="rounded-lg border border-border bg-card p-6">
                     <h3 id="statUsers" class="text-sm font-medium text-muted-foreground">Всего пользователей</h3>
                     <div id="usersCount" class="text-3xl font-bold mt-2">-</div>
@@ -213,6 +217,14 @@
                 <div class="rounded-lg border border-border bg-card p-6">
                     <h3 id="statScreenshot" class="text-sm font-medium text-muted-foreground">Одобрение скриншота</h3>
                     <div id="screenshotApproval" class="text-3xl font-bold mt-2 text-purple-500">-</div>
+                </div>
+                <div class="rounded-lg border border-border bg-card p-6">
+                    <h3 id="statConversion" class="text-sm font-medium text-muted-foreground">Conversion Rate</h3>
+                    <div id="conversionRate" class="text-3xl font-bold mt-2 text-cyan-500">-</div>
+                </div>
+                <div class="rounded-lg border border-border bg-card p-6">
+                    <h3 id="statCPA" class="text-sm font-medium text-muted-foreground">CPA</h3>
+                    <div id="cpaValue" class="text-3xl font-bold mt-2 text-orange-500">-</div>
                 </div>
             </div>
 
@@ -251,6 +263,7 @@
                 pageTitle: '📊 Статистика Рефералов',
                 labelApiKey: 'API ключ',
                 labelRefCode: 'Реферальный код',
+                labelUserCost: 'Стоимость пользователя ($)',
                 labelDateFilter: 'Фильтр по дате',
                 btnLoad: 'Загрузить',
                 placeholderApiKey: 'Введите API ключ',
@@ -261,6 +274,8 @@
                 statCancelled: 'Отменено',
                 statValidation: 'Валидация',
                 statScreenshot: 'Одобрение скриншота',
+                statConversion: 'Conversion Rate',
+                statCPA: 'CPA',
                 chartTimeline: '📈 Хронология задач',
                 chartDistribution: '🥧 Распределение статусов',
                 loading: 'Загрузка данных...',
@@ -278,6 +293,7 @@
                 pageTitle: '📊 Referral Statistics Dashboard',
                 labelApiKey: 'API Key',
                 labelRefCode: 'Referral Code',
+                labelUserCost: 'User Cost ($)',
                 labelDateFilter: 'Date Filter',
                 btnLoad: 'Load Data',
                 placeholderApiKey: 'Enter API key',
@@ -288,6 +304,8 @@
                 statCancelled: 'Cancelled',
                 statValidation: 'Validation',
                 statScreenshot: 'Screenshot Approval',
+                statConversion: 'Conversion Rate',
+                statCPA: 'CPA',
                 chartTimeline: '📈 Tasks Timeline',
                 chartDistribution: '🥧 Task Status Distribution',
                 loading: 'Loading data...',
@@ -310,6 +328,7 @@
             document.getElementById('pageTitle').textContent = t.pageTitle;
             document.getElementById('labelApiKey').textContent = t.labelApiKey;
             document.getElementById('labelRefCode').textContent = t.labelRefCode;
+            document.getElementById('labelUserCost').textContent = t.labelUserCost;
             document.getElementById('labelDateFilter').textContent = t.labelDateFilter;
             document.getElementById('btnLoadText').textContent = t.btnLoad;
             document.getElementById('apiKey').placeholder = t.placeholderApiKey;
@@ -321,6 +340,8 @@
             document.getElementById('statCancelled').textContent = t.statCancelled;
             document.getElementById('statValidation').textContent = t.statValidation;
             document.getElementById('statScreenshot').textContent = t.statScreenshot;
+            document.getElementById('statConversion').textContent = t.statConversion;
+            document.getElementById('statCPA').textContent = t.statCPA;
             
             document.getElementById('chartTimeline').textContent = t.chartTimeline;
             document.getElementById('chartDistribution').textContent = t.chartDistribution;
@@ -473,6 +494,19 @@
             document.getElementById('cancelled').textContent = filteredTotal.cancelled;
             document.getElementById('validation').textContent = filteredTotal.validation;
             document.getElementById('screenshotApproval').textContent = filteredTotal.screenshotApproval;
+            
+            // Calculate Conversion Rate
+            const conversionRate = data.usersCount > 0 
+                ? ((filteredTotal.finished / data.usersCount) * 100).toFixed(2) + '%'
+                : '0%';
+            document.getElementById('conversionRate').textContent = conversionRate;
+            
+            // Calculate CPA
+            const userCost = parseFloat(document.getElementById('userCost').value) || 0;
+            const totalCost = data.usersCount * userCost;
+            const revenue = filteredTotal.finished * 1; // $1 per finished task
+            const cpa = totalCost > 0 ? ((totalCost - revenue) / data.usersCount).toFixed(2) : '0.00';
+            document.getElementById('cpaValue').textContent = '$' + cpa;
 
             const dates = filteredStats.map(s => new Date(s.date).toLocaleDateString());
             const t = translations[currentLang];
@@ -538,10 +572,30 @@
             });
 
             const pieCtx = document.getElementById('pieChart').getContext('2d');
+            
+            // Calculate total and percentages
+            const totalTasks = filteredTotal.finished + filteredTotal.cancelled + filteredTotal.inProgress + filteredTotal.validation + filteredTotal.screenshotApproval;
+            const percentages = [
+                totalTasks > 0 ? ((filteredTotal.finished / totalTasks) * 100).toFixed(1) : 0,
+                totalTasks > 0 ? ((filteredTotal.cancelled / totalTasks) * 100).toFixed(1) : 0,
+                totalTasks > 0 ? ((filteredTotal.inProgress / totalTasks) * 100).toFixed(1) : 0,
+                totalTasks > 0 ? ((filteredTotal.validation / totalTasks) * 100).toFixed(1) : 0,
+                totalTasks > 0 ? ((filteredTotal.screenshotApproval / totalTasks) * 100).toFixed(1) : 0
+            ];
+            
+            // Create labels with percentages
+            const labelsWithPercentages = [
+                `${t.chartFinished} (${percentages[0]}%)`,
+                `${t.chartCancelled} (${percentages[1]}%)`,
+                `${t.chartInProgress} (${percentages[2]}%)`,
+                `${t.chartValidation} (${percentages[3]}%)`,
+                `${t.chartScreenshot} (${percentages[4]}%)`
+            ];
+            
             pieChart = new Chart(pieCtx, {
                 type: 'doughnut',
                 data: {
-                    labels: [t.chartFinished, t.chartCancelled, t.chartInProgress, t.chartValidation, t.chartScreenshot],
+                    labels: labelsWithPercentages,
                     datasets: [{
                         data: [
                             filteredTotal.finished,
@@ -559,8 +613,8 @@
                     maintainAspectRatio: false,
                     plugins: {
                         legend: { 
-                            labels: { color: '#e5e7eb', font: { size: 11 } },
-                            position: 'bottom'
+                            labels: { color: '#e5e7eb', font: { size: 12 } },
+                            position: 'right'
                         },
                         datalabels: {
                             color: '#fff',
