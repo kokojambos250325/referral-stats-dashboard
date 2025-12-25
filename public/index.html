@@ -107,19 +107,12 @@
         .flatpickr-months .flatpickr-next-month:hover {
             color: hsl(215 20.2% 65.1%);
         }
-        /* Completely hide days from other months */
+        /* Style days from other months - very dim but visible */
         .flatpickr-day.prevMonthDay,
         .flatpickr-day.nextMonthDay {
-            display: none !important;
-        }
-        /* Adjust calendar grid to remove gaps */
-        .flatpickr-days {
-            width: auto !important;
-        }
-        .dayContainer {
-            width: auto !important;
-            min-width: auto !important;
-            max-width: none !important;
+            color: hsl(215.4 16.3% 46.9%) !important;
+            opacity: 0.15 !important;
+            cursor: not-allowed !important;
         }
     </style>
 </head>
