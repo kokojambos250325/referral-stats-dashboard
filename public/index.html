@@ -289,6 +289,15 @@
         function displayData(data, filteredStats) {
             document.getElementById('stats').classList.remove('hidden');
             
+            // Set date picker min/max based on available dates
+            const allDates = data.tasksStatistics.map(s => s.date.split('T')[0]);
+            if (allDates.length > 0) {
+                const minDate = allDates.reduce((a, b) => a < b ? a : b);
+                const maxDate = allDates.reduce((a, b) => a > b ? a : b);
+                document.getElementById('dateFilter').setAttribute('min', minDate);
+                document.getElementById('dateFilter').setAttribute('max', maxDate);
+            }
+            
             const filteredTotal = {
                 finished: filteredStats.reduce((sum, s) => sum + s.finished, 0),
                 cancelled: filteredStats.reduce((sum, s) => sum + s.cancelled, 0),
