@@ -7,6 +7,8 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.2.0/dist/chartjs-plugin-datalabels.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
     <script>
         tailwind.config = {
             darkMode: 'class',
@@ -44,9 +46,36 @@
         }
     </script>
     <style>
-        input[type="date"]::-webkit-calendar-picker-indicator {
-            filter: invert(1);
-            cursor: pointer;
+        /* Flatpickr dark theme */
+        .flatpickr-calendar {
+            background: hsl(222.2 84% 4.9%);
+            border: 1px solid hsl(217.2 32.6% 17.5%);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.3);
+        }
+        .flatpickr-months {
+            background: hsl(222.2 84% 4.9%);
+        }
+        .flatpickr-current-month .flatpickr-monthDropdown-months,
+        .flatpickr-current-month input.cur-year {
+            color: hsl(210 40% 98%);
+        }
+        .flatpickr-weekday {
+            color: hsl(215 20.2% 65.1%);
+        }
+        .flatpickr-day {
+            color: hsl(210 40% 98%);
+        }
+        .flatpickr-day.disabled {
+            color: hsl(215.4 16.3% 46.9%);
+        }
+        .flatpickr-day:hover:not(.disabled) {
+            background: hsl(217.2 32.6% 17.5%);
+            border-color: hsl(217.2 32.6% 17.5%);
+        }
+        .flatpickr-day.selected {
+            background: hsl(210 40% 98%);
+            color: hsl(222.2 47.4% 11.2%);
+            border-color: hsl(210 40% 98%);
         }
     </style>
 </head>
@@ -74,12 +103,11 @@
             <div class="flex flex-col space-y-1.5">
                 <label id="labelDateFilter" class="text-sm font-medium leading-none">Фильтр по дате</label>
                 <div class="flex gap-2">
-                    <input type="date" id="dateFilter" class="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring">
+                    <input type="text" id="dateFilter" class="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring" placeholder="Выберите дату" readonly>
                     <button id="btnLoad" onclick="loadData()" class="inline-flex items-center justify-center rounded-md text-sm font-medium h-10 px-4 bg-primary text-primary-foreground hover:bg-primary/90 whitespace-nowrap">
                         🔄 <span id="btnLoadText" class="ml-1">Загрузить</span>
                     </button>
                 </div>
-                <small id="dateHint" class="text-xs text-muted-foreground"></small>
             </div>
         </div>
 
@@ -147,6 +175,7 @@
         let timelineChart, pieChart;
         let currentLang = 'ru';
         let availableDates = []; // Список доступных дат
+        let flatpickrInstance = null; // Flatpickr instance
 
         const translations = {
             ru: {
@@ -296,18 +325,28 @@
                 .map(s => s.date.split('T')[0])
                 .sort();
             
-            // Set min/max for date picker
-            const dateFilter = document.getElementById('dateFilter');
-            if (availableDates.length > 0) {
-                dateFilter.setAttribute('min', availableDates[0]);
-                dateFilter.setAttribute('max', availableDates[availableDates.length - 1]);
-                
-                // Show hint with available dates
-                const hint = currentLang === 'ru' 
-                    ? `Доступные даты: ${availableDates.map(d => new Date(d + 'T00:00:00').toLocaleDateString('ru-RU')).join(', ')}`
-                    : `Available dates: ${availableDates.map(d => new Date(d + 'T00:00:00').toLocaleDateString('en-US')).join(', ')}`;
-                document.getElementById('dateHint').textContent = hint;
+            // Initialize or update Flatpickr with available dates only
+            if (flatpickrInstance) {
+                flatpickrInstance.destroy();
             }
+            
+            flatpickrInstance = flatpickr('#dateFilter', {
+                enable: availableDates, // Только эти даты доступны
+                dateFormat: 'Y-m-d',
+                locale: {
+                    firstDayOfWeek: 1,
+                    weekdays: {
+                        shorthand: ['Вс', 'Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб'],
+                        longhand: ['Воскресенье', 'Понедельник', 'Вторник', 'Среда', 'Четверг', 'Пятница', 'Суббота']
+                    },
+                    months: {
+                        shorthand: ['Янв', 'Фев', 'Мар', 'Апр', 'Май', 'Июн', 'Июл', 'Авг', 'Сен', 'Окт', 'Ноя', 'Дек'],
+                        longhand: ['Январь', 'Февраль', 'Март', 'Апрель', 'Май', 'Июнь', 'Июль', 'Август', 'Сентябрь', 'Октябрь', 'Ноябрь', 'Декабрь']
+                    }
+                },
+                allowInput: false,
+                clickOpens: true
+            });
             
             const filteredTotal = {
                 finished: filteredStats.reduce((sum, s) => sum + s.finished, 0),
@@ -435,20 +474,6 @@
         if (urlParams.get('key') && urlParams.get('refCode')) {
             loadData();
         }
-
-        // Validate date selection
-        document.addEventListener('DOMContentLoaded', function() {
-            const dateInput = document.getElementById('dateFilter');
-            dateInput.addEventListener('change', function() {
-                const selectedDate = this.value;
-                if (selectedDate && availableDates.length > 0 && !availableDates.includes(selectedDate)) {
-                    alert(currentLang === 'ru' 
-                        ? 'Эта дата недоступна. Выберите одну из: ' + availableDates.map(d => new Date(d + 'T00:00:00').toLocaleDateString('ru-RU')).join(', ')
-                        : 'This date is not available. Choose one of: ' + availableDates.map(d => new Date(d + 'T00:00:00').toLocaleDateString('en-US')).join(', '));
-                    this.value = '';
-                }
-            });
-        });
     </script>
 </body>
 </html>
