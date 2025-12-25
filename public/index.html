@@ -55,8 +55,16 @@
         .flatpickr-months {
             background: hsl(222.2 84% 4.9%);
         }
-        .flatpickr-current-month .flatpickr-monthDropdown-months,
+        .flatpickr-current-month .flatpickr-monthDropdown-months {
+            background: hsl(222.2 84% 4.9%);
+            color: hsl(210 40% 98%);
+        }
         .flatpickr-current-month input.cur-year {
+            color: hsl(210 40% 98%);
+        }
+        /* Dropdown months - fix white text on white */
+        .flatpickr-monthDropdown-months option {
+            background: hsl(222.2 84% 4.9%);
             color: hsl(210 40% 98%);
         }
         .flatpickr-weekday {
@@ -65,17 +73,33 @@
         .flatpickr-day {
             color: hsl(210 40% 98%);
         }
-        .flatpickr-day.disabled {
-            color: hsl(215.4 16.3% 46.9%);
+        /* Disabled dates - visible but grayed out */
+        .flatpickr-day.flatpickr-disabled,
+        .flatpickr-day.flatpickr-disabled:hover {
+            color: hsl(215.4 16.3% 46.9%) !important;
+            opacity: 0.4;
+            cursor: not-allowed;
+            background: transparent !important;
         }
-        .flatpickr-day:hover:not(.disabled) {
+        .flatpickr-day:hover:not(.flatpickr-disabled) {
             background: hsl(217.2 32.6% 17.5%);
             border-color: hsl(217.2 32.6% 17.5%);
         }
-        .flatpickr-day.selected {
+        .flatpickr-day.selected,
+        .flatpickr-day.selected:hover {
             background: hsl(210 40% 98%);
             color: hsl(222.2 47.4% 11.2%);
             border-color: hsl(210 40% 98%);
+        }
+        /* Arrows */
+        .flatpickr-months .flatpickr-prev-month,
+        .flatpickr-months .flatpickr-next-month {
+            color: hsl(210 40% 98%);
+            fill: hsl(210 40% 98%);
+        }
+        .flatpickr-months .flatpickr-prev-month:hover,
+        .flatpickr-months .flatpickr-next-month:hover {
+            color: hsl(215 20.2% 65.1%);
         }
     </style>
 </head>
