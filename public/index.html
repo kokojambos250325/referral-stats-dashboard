@@ -43,6 +43,12 @@
             }
         }
     </script>
+    <style>
+        input[type="date"]::-webkit-calendar-picker-indicator {
+            filter: invert(1);
+            cursor: pointer;
+        }
+    </style>
 </head>
 <body class="min-h-screen bg-background text-foreground antialiased">
     <div class="container mx-auto p-6 max-w-7xl">
@@ -68,13 +74,12 @@
             <div class="flex flex-col space-y-1.5">
                 <label id="labelDateFilter" class="text-sm font-medium leading-none">Фильтр по дате</label>
                 <div class="flex gap-2">
-                    <select id="dateFilter" class="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring">
-                        <option value="">Все даты</option>
-                    </select>
+                    <input type="date" id="dateFilter" class="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring">
                     <button id="btnLoad" onclick="loadData()" class="inline-flex items-center justify-center rounded-md text-sm font-medium h-10 px-4 bg-primary text-primary-foreground hover:bg-primary/90 whitespace-nowrap">
                         🔄 <span id="btnLoadText" class="ml-1">Загрузить</span>
                     </button>
                 </div>
+                <small id="dateHint" class="text-xs text-muted-foreground"></small>
             </div>
         </div>
 
@@ -141,6 +146,7 @@
     <script>
         let timelineChart, pieChart;
         let currentLang = 'ru';
+        let availableDates = []; // Список доступных дат
 
         const translations = {
             ru: {
@@ -285,27 +291,22 @@
         function displayData(data, filteredStats) {
             document.getElementById('stats').classList.remove('hidden');
             
-            // Populate date filter with available dates
-            const dateFilter = document.getElementById('dateFilter');
-            const currentValue = dateFilter.value;
-            dateFilter.innerHTML = '<option value="">' + (currentLang === 'ru' ? 'Все даты' : 'All dates') + '</option>';
-            
-            const allDates = data.tasksStatistics
+            // Save available dates
+            availableDates = data.tasksStatistics
                 .map(s => s.date.split('T')[0])
-                .sort()
-                .reverse(); // Новые даты сверху
+                .sort();
             
-            allDates.forEach(date => {
-                const option = document.createElement('option');
-                option.value = date;
-                const dateObj = new Date(date + 'T00:00:00');
-                option.textContent = dateObj.toLocaleDateString(currentLang === 'ru' ? 'ru-RU' : 'en-US');
-                dateFilter.appendChild(option);
-            });
-            
-            // Restore selected value if it exists
-            if (currentValue && allDates.includes(currentValue)) {
-                dateFilter.value = currentValue;
+            // Set min/max for date picker
+            const dateFilter = document.getElementById('dateFilter');
+            if (availableDates.length > 0) {
+                dateFilter.setAttribute('min', availableDates[0]);
+                dateFilter.setAttribute('max', availableDates[availableDates.length - 1]);
+                
+                // Show hint with available dates
+                const hint = currentLang === 'ru' 
+                    ? `Доступные даты: ${availableDates.map(d => new Date(d + 'T00:00:00').toLocaleDateString('ru-RU')).join(', ')}`
+                    : `Available dates: ${availableDates.map(d => new Date(d + 'T00:00:00').toLocaleDateString('en-US')).join(', ')}`;
+                document.getElementById('dateHint').textContent = hint;
             }
             
             const filteredTotal = {
@@ -434,6 +435,20 @@
         if (urlParams.get('key') && urlParams.get('refCode')) {
             loadData();
         }
+
+        // Validate date selection
+        document.addEventListener('DOMContentLoaded', function() {
+            const dateInput = document.getElementById('dateFilter');
+            dateInput.addEventListener('change', function() {
+                const selectedDate = this.value;
+                if (selectedDate && availableDates.length > 0 && !availableDates.includes(selectedDate)) {
+                    alert(currentLang === 'ru' 
+                        ? 'Эта дата недоступна. Выберите одну из: ' + availableDates.map(d => new Date(d + 'T00:00:00').toLocaleDateString('ru-RU')).join(', ')
+                        : 'This date is not available. Choose one of: ' + availableDates.map(d => new Date(d + 'T00:00:00').toLocaleDateString('en-US')).join(', '));
+                    this.value = '';
+                }
+            });
+        });
     </script>
 </body>
 </html>
