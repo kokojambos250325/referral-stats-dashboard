@@ -15,30 +15,30 @@
             theme: {
                 extend: {
                     colors: {
-                        border: "hsl(217.2 32.6% 17.5%)",
-                        input: "hsl(217.2 32.6% 17.5%)",
-                        ring: "hsl(212.7 26.8% 83.9%)",
-                        background: "hsl(222.2 84% 4.9%)",
-                        foreground: "hsl(210 40% 98%)",
+                        border: "hsl(var(--border))",
+                        input: "hsl(var(--input))",
+                        ring: "hsl(var(--ring))",
+                        background: "hsl(var(--background))",
+                        foreground: "hsl(var(--foreground))",
                         primary: {
-                            DEFAULT: "hsl(210 40% 98%)",
-                            foreground: "hsl(222.2 47.4% 11.2%)",
+                            DEFAULT: "hsl(var(--primary))",
+                            foreground: "hsl(var(--primary-foreground))",
                         },
                         secondary: {
-                            DEFAULT: "hsl(217.2 32.6% 17.5%)",
-                            foreground: "hsl(210 40% 98%)",
+                            DEFAULT: "hsl(var(--secondary))",
+                            foreground: "hsl(var(--secondary-foreground))",
                         },
                         muted: {
-                            DEFAULT: "hsl(217.2 32.6% 17.5%)",
-                            foreground: "hsl(215 20.2% 65.1%)",
+                            DEFAULT: "hsl(var(--muted))",
+                            foreground: "hsl(var(--muted-foreground))",
                         },
                         accent: {
-                            DEFAULT: "hsl(217.2 32.6% 17.5%)",
-                            foreground: "hsl(210 40% 98%)",
+                            DEFAULT: "hsl(var(--accent))",
+                            foreground: "hsl(var(--accent-foreground))",
                         },
                         card: {
-                            DEFAULT: "hsl(222.2 84% 4.9%)",
-                            foreground: "hsl(210 40% 98%)",
+                            DEFAULT: "hsl(var(--card))",
+                            foreground: "hsl(var(--card-foreground))",
                         },
                     },
                 }
@@ -46,81 +46,116 @@
         }
     </script>
     <style>
-        /* Flatpickr dark theme */
+        /* CSS Variables matching admin panel theme */
+        :root {
+            /* Gray monochrome light theme */
+            --background: 0 0% 98%;
+            --foreground: 0 0% 9%;
+            --card: 0 0% 100%;
+            --card-foreground: 0 0% 9%;
+            --popover: 0 0% 100%;
+            --popover-foreground: 0 0% 9%;
+            --primary: 0 0% 9%;
+            --primary-foreground: 0 0% 98%;
+            --secondary: 0 0% 96%;
+            --secondary-foreground: 0 0% 9%;
+            --muted: 0 0% 96%;
+            --muted-foreground: 0 0% 45%;
+            --accent: 0 0% 96%;
+            --accent-foreground: 0 0% 9%;
+            --destructive: 0 84.2% 60.2%;
+            --destructive-foreground: 0 0% 98%;
+            --border: 0 0% 89%;
+            --input: 0 0% 89%;
+            --ring: 0 0% 9%;
+        }
+
+        .dark {
+            /* Gray monochrome dark theme */
+            --background: 0 0% 9%;
+            --foreground: 0 0% 98%;
+            --card: 0 0% 13%;
+            --card-foreground: 0 0% 98%;
+            --primary: 0 0% 98%;
+            --primary-foreground: 0 0% 9%;
+            --secondary: 0 0% 18%;
+            --muted: 0 0% 18%;
+            --muted-foreground: 0 0% 63%;
+            --border: 0 0% 20%;
+            --input: 0 0% 20%;
+            --ring: 0 0% 83%;
+        }
+
+        /* Flatpickr theme */
         .flatpickr-calendar {
-            background: hsl(222.2 84% 4.9%);
-            border: 1px solid hsl(217.2 32.6% 17.5%);
+            background: hsl(var(--card));
+            border: 1px solid hsl(var(--border));
             box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.3);
         }
         .flatpickr-months {
-            background: hsl(222.2 84% 4.9%);
+            background: hsl(var(--card));
         }
         .flatpickr-current-month .flatpickr-monthDropdown-months {
-            background: hsl(222.2 84% 4.9%) !important;
-            color: hsl(210 40% 98%) !important;
+            background: hsl(var(--card)) !important;
+            color: hsl(var(--foreground)) !important;
         }
         .flatpickr-current-month input.cur-year {
-            color: hsl(210 40% 98%) !important;
+            color: hsl(var(--foreground)) !important;
         }
-        /* Dropdown months - fix white text on white */
         .flatpickr-monthDropdown-months option {
-            background: hsl(222.2 84% 4.9%) !important;
-            color: hsl(210 40% 98%) !important;
+            background: hsl(var(--card)) !important;
+            color: hsl(var(--foreground)) !important;
         }
         .flatpickr-monthDropdown-months:hover,
         .flatpickr-monthDropdown-months:focus,
         .flatpickr-monthDropdown-months:active {
-            background: hsl(222.2 84% 4.9%) !important;
-            color: hsl(210 40% 98%) !important;
+            background: hsl(var(--card)) !important;
+            color: hsl(var(--foreground)) !important;
         }
         .flatpickr-weekday {
-            color: hsl(215 20.2% 65.1%);
+            color: hsl(var(--muted-foreground));
         }
         .flatpickr-day {
-            color: hsl(210 40% 98%);
+            color: hsl(var(--foreground));
         }
-        /* Disabled dates - visible but grayed out */
         .flatpickr-day.flatpickr-disabled,
         .flatpickr-day.flatpickr-disabled:hover {
-            color: hsl(215.4 16.3% 46.9%) !important;
+            color: hsl(var(--muted-foreground)) !important;
             opacity: 0.4;
             cursor: not-allowed;
             background: transparent !important;
         }
         .flatpickr-day:hover:not(.flatpickr-disabled) {
-            background: hsl(217.2 32.6% 17.5%);
-            border-color: hsl(217.2 32.6% 17.5%);
+            background: hsl(var(--secondary));
+            border-color: hsl(var(--border));
         }
         .flatpickr-day.selected,
         .flatpickr-day.selected:hover {
-            background: hsl(210 40% 98%);
-            color: hsl(222.2 47.4% 11.2%);
-            border-color: hsl(210 40% 98%);
+            background: hsl(var(--primary));
+            color: hsl(var(--primary-foreground));
+            border-color: hsl(var(--primary));
         }
-        /* Arrows */
         .flatpickr-months .flatpickr-prev-month,
         .flatpickr-months .flatpickr-next-month {
-            color: hsl(210 40% 98%);
-            fill: hsl(210 40% 98%);
+            color: hsl(var(--foreground));
+            fill: hsl(var(--foreground));
         }
         .flatpickr-months .flatpickr-prev-month:hover,
         .flatpickr-months .flatpickr-next-month:hover {
-            color: hsl(215 20.2% 65.1%);
+            color: hsl(var(--muted-foreground));
         }
-        /* Style days from other months - very dim but visible */
         .flatpickr-day.prevMonthDay,
         .flatpickr-day.nextMonthDay {
-            color: hsl(215.4 16.3% 46.9%) !important;
+            color: hsl(var(--muted-foreground)) !important;
             opacity: 0.15 !important;
             cursor: not-allowed !important;
         }
-        /* Calendar action buttons */
         .flatpickr-calendar .flatpickr-buttons {
             display: flex;
             gap: 8px;
             padding: 10px;
-            border-top: 1px solid hsl(217.2 32.6% 17.5%);
-            background: hsl(222.2 84% 4.9%);
+            border-top: 1px solid hsl(var(--border));
+            background: hsl(var(--card));
         }
         .flatpickr-calendar .flatpickr-buttons button {
             flex: 1;
@@ -129,22 +164,22 @@
             font-size: 14px;
             font-weight: 500;
             cursor: pointer;
-            border: 1px solid hsl(217.2 32.6% 17.5%);
+            border: 1px solid hsl(var(--border));
             transition: all 0.2s;
         }
         .flatpickr-calendar .flatpickr-buttons .btn-clear {
-            background: hsl(217.2 32.6% 17.5%);
-            color: hsl(210 40% 98%);
+            background: hsl(var(--secondary));
+            color: hsl(var(--foreground));
         }
         .flatpickr-calendar .flatpickr-buttons .btn-clear:hover {
-            background: hsl(217.2 32.6% 22%);
+            opacity: 0.8;
         }
         .flatpickr-calendar .flatpickr-buttons .btn-apply {
-            background: hsl(210 40% 98%);
-            color: hsl(222.2 47.4% 11.2%);
+            background: hsl(var(--primary));
+            color: hsl(var(--primary-foreground));
         }
         .flatpickr-calendar .flatpickr-buttons .btn-apply:hover {
-            background: hsl(210 40% 90%);
+            opacity: 0.9;
         }
     </style>
 </head>
@@ -255,8 +290,54 @@
     <script>
         let timelineChart, pieChart;
         let currentLang = 'ru';
-        let availableDates = []; // Список доступных дат
-        let flatpickrInstance = null; // Flatpickr instance
+        let availableDates = [];
+        let flatpickrInstance = null;
+
+        // Listen for theme changes from parent admin panel
+        window.addEventListener('message', (event) => {
+            // Accept messages from admin panel domains
+            const allowedOrigins = [
+                'https://admin.aso.market',
+                'https://aso-market-admin-dev.vercel.app',
+                'http://localhost:5173'
+            ];
+            
+            if (allowedOrigins.includes(event.origin) && event.data.type === 'theme') {
+                const theme = event.data.theme;
+                const htmlElement = document.documentElement;
+                
+                if (theme === 'dark') {
+                    htmlElement.classList.add('dark');
+                } else {
+                    htmlElement.classList.remove('dark');
+                }
+                
+                // Redraw charts with new theme
+                if (timelineChart && pieChart) {
+                    updateChartColors();
+                }
+            }
+        });
+
+        function updateChartColors() {
+            const isDark = document.documentElement.classList.contains('dark');
+            const textColor = isDark ? '#e5e7eb' : '#1f2937';
+            const gridColor = isDark ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.1)';
+
+            if (timelineChart) {
+                timelineChart.options.plugins.legend.labels.color = textColor;
+                timelineChart.options.scales.y.ticks.color = textColor;
+                timelineChart.options.scales.y.grid.color = gridColor;
+                timelineChart.options.scales.x.ticks.color = textColor;
+                timelineChart.options.scales.x.grid.color = gridColor;
+                timelineChart.update();
+            }
+
+            if (pieChart) {
+                pieChart.options.plugins.legend.labels.color = textColor;
+                pieChart.update();
+            }
+        }
 
         const translations = {
             ru: {
@@ -346,7 +427,6 @@
             document.getElementById('chartTimeline').textContent = t.chartTimeline;
             document.getElementById('chartDistribution').textContent = t.chartDistribution;
             
-            // Button styling
             if (lang === 'ru') {
                 document.getElementById('btnRu').className = "inline-flex items-center justify-center rounded-md text-sm font-medium h-9 px-4 bg-blue-900 text-white hover:bg-blue-800";
                 document.getElementById('btnEn').className = "inline-flex items-center justify-center rounded-md text-sm font-medium h-9 px-4 bg-slate-800 text-slate-400 hover:bg-slate-700";
@@ -355,7 +435,6 @@
                 document.getElementById('btnEn').className = "inline-flex items-center justify-center rounded-md text-sm font-medium h-9 px-4 bg-blue-900 text-white hover:bg-blue-800";
             }
             
-            // Refresh charts if they exist
             if (timelineChart && pieChart) {
                 loadData();
             }
@@ -419,12 +498,10 @@
         function displayData(data, filteredStats) {
             document.getElementById('stats').classList.remove('hidden');
             
-            // Save available dates
             availableDates = data.tasksStatistics
                 .map(s => s.date.split('T')[0])
                 .sort();
             
-            // Initialize or update Flatpickr with available dates only
             if (flatpickrInstance) {
                 flatpickrInstance.destroy();
             }
@@ -447,17 +524,14 @@
                 allowInput: false,
                 clickOpens: true,
                 onReady: function(selectedDates, dateStr, instance) {
-                    // Force calendar refresh to fix day count rendering
                     setTimeout(() => instance.redraw(), 0);
                     
-                    // Add custom buttons
                     const calendar = instance.calendarContainer;
                     const buttonsDiv = document.createElement('div');
                     buttonsDiv.className = 'flatpickr-buttons';
                     
                     const t = translations[currentLang];
                     
-                    // Clear button
                     const clearBtn = document.createElement('button');
                     clearBtn.className = 'btn-clear';
                     clearBtn.textContent = t.btnClear;
@@ -468,7 +542,6 @@
                         loadData();
                     };
                     
-                    // Apply button
                     const applyBtn = document.createElement('button');
                     applyBtn.className = 'btn-apply';
                     applyBtn.textContent = t.btnApply;
@@ -493,13 +566,10 @@
                 screenshotApproval: filteredStats.reduce((sum, s) => sum + s.screenshotApproval, 0)
             };
             
-            // Display actual users count from API
             document.getElementById('usersCount').textContent = data.usersCount;
             
-            // Calculate total tasks for pie chart
             const totalTasks = filteredTotal.finished + filteredTotal.cancelled + filteredTotal.inProgress + filteredTotal.validation + filteredTotal.screenshotApproval;
             
-            // Calculate percentages based on total users from API
             const inProgressPercent = data.usersCount > 0 ? ((filteredTotal.inProgress / data.usersCount) * 100).toFixed(2) : '0.00';
             const finishedPercent = data.usersCount > 0 ? ((filteredTotal.finished / data.usersCount) * 100).toFixed(2) : '0.00';
             const cancelledPercent = data.usersCount > 0 ? ((filteredTotal.cancelled / data.usersCount) * 100).toFixed(2) : '0.00';
@@ -512,18 +582,16 @@
             document.getElementById('validation').innerHTML = `${filteredTotal.validation}<span class="text-sm font-normal ml-2 opacity-70">${validationPercent}%</span>`;
             document.getElementById('screenshotApproval').innerHTML = `${filteredTotal.screenshotApproval}<span class="text-sm font-normal ml-2 opacity-70">${screenshotPercent}%</span>`;
             
-            // Calculate Conversion Rate (based on actual users count)
             const conversionRate = data.usersCount > 0
                 ? ((filteredTotal.finished / data.usersCount) * 100).toFixed(2) + '%'
                 : '0.00%';
             document.getElementById('conversionRate').textContent = conversionRate;
             
-            // Calculate CPA (total cost - revenue)
             const userCost = parseFloat(document.getElementById('userCost').value) || 0;
             let cpa = '0.00';
             if (userCost > 0) {
                 const totalCost = data.usersCount * userCost;
-                const revenue = filteredTotal.finished * 1; // $1 per finished task
+                const revenue = filteredTotal.finished * 1;
                 cpa = (totalCost - revenue).toFixed(2);
             }
             document.getElementById('cpaValue').textContent = '$' + cpa;
@@ -533,6 +601,10 @@
             
             if (timelineChart) timelineChart.destroy();
             if (pieChart) pieChart.destroy();
+
+            const isDark = document.documentElement.classList.contains('dark');
+            const textColor = isDark ? '#e5e7eb' : '#1f2937';
+            const gridColor = isDark ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.1)';
 
             const timelineCtx = document.getElementById('timelineChart').getContext('2d');
             timelineChart = new Chart(timelineCtx, {
@@ -575,17 +647,17 @@
                     maintainAspectRatio: false,
                     plugins: {
                         legend: { 
-                            labels: { color: '#e5e7eb', font: { size: 11 } }
+                            labels: { color: textColor, font: { size: 11 } }
                         }
                     },
                     scales: {
                         y: { 
-                            ticks: { color: '#e5e7eb', font: { size: 14, weight: 'bold' } },
-                            grid: { color: 'rgba(255,255,255,0.1)' }
+                            ticks: { color: textColor, font: { size: 14, weight: 'bold' } },
+                            grid: { color: gridColor }
                         },
                         x: { 
-                            ticks: { color: '#e5e7eb', font: { size: 14, weight: 'bold' } },
-                            grid: { color: 'rgba(255,255,255,0.1)' }
+                            ticks: { color: textColor, font: { size: 14, weight: 'bold' } },
+                            grid: { color: gridColor }
                         }
                     }
                 }
@@ -593,7 +665,6 @@
 
             const pieCtx = document.getElementById('pieChart').getContext('2d');
             
-            // Calculate percentages for pie chart (reuse totalTasks from above)
             const percentages = [
                 totalTasks > 0 ? ((filteredTotal.finished / totalTasks) * 100).toFixed(1) : 0,
                 totalTasks > 0 ? ((filteredTotal.cancelled / totalTasks) * 100).toFixed(1) : 0,
@@ -602,7 +673,6 @@
                 totalTasks > 0 ? ((filteredTotal.screenshotApproval / totalTasks) * 100).toFixed(1) : 0
             ];
             
-            // Create labels with percentages
             const labelsWithPercentages = [
                 `${t.chartFinished} (${percentages[0]}%)`,
                 `${t.chartCancelled} (${percentages[1]}%)`,
@@ -632,7 +702,7 @@
                     maintainAspectRatio: false,
                     plugins: {
                         legend: { 
-                            labels: { color: '#e5e7eb', font: { size: 12 } },
+                            labels: { color: textColor, font: { size: 12 } },
                             position: 'right'
                         },
                         datalabels: {
