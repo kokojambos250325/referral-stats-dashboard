@@ -40,15 +40,19 @@
                             DEFAULT: "hsl(var(--card))",
                             foreground: "hsl(var(--card-foreground))",
                         },
+                        destructive: {
+                            DEFAULT: "hsl(var(--destructive))",
+                            foreground: "hsl(var(--destructive-foreground))",
+                        },
                     },
                 }
             }
         }
     </script>
     <style>
-        /* CSS Variables matching admin panel theme */
+        /* Exact CSS Variables from admin panel - Gray monochrome theme */
         :root {
-            /* Gray monochrome light theme */
+            /* Gray monochrome light theme from screenshot */
             --background: 0 0% 98%;
             --foreground: 0 0% 9%;
             --card: 0 0% 100%;
@@ -71,22 +75,29 @@
         }
 
         .dark {
-            /* Gray monochrome dark theme */
+            /* Gray monochrome dark theme - shadcn slate style */
             --background: 0 0% 9%;
             --foreground: 0 0% 98%;
             --card: 0 0% 13%;
             --card-foreground: 0 0% 98%;
+            --popover: 0 0% 13%;
+            --popover-foreground: 0 0% 98%;
             --primary: 0 0% 98%;
             --primary-foreground: 0 0% 9%;
             --secondary: 0 0% 18%;
+            --secondary-foreground: 0 0% 98%;
             --muted: 0 0% 18%;
             --muted-foreground: 0 0% 63%;
+            --accent: 0 0% 18%;
+            --accent-foreground: 0 0% 98%;
+            --destructive: 0 84.2% 60.2%;
+            --destructive-foreground: 0 0% 98%;
             --border: 0 0% 20%;
             --input: 0 0% 20%;
             --ring: 0 0% 83%;
         }
 
-        /* Flatpickr theme */
+        /* Flatpickr theme using CSS variables */
         .flatpickr-calendar {
             background: hsl(var(--card));
             border: 1px solid hsl(var(--border));
@@ -321,7 +332,7 @@
 
         function updateChartColors() {
             const isDark = document.documentElement.classList.contains('dark');
-            const textColor = isDark ? '#e5e7eb' : '#1f2937';
+            const textColor = isDark ? 'hsl(0 0% 98%)' : 'hsl(0 0% 9%)';
             const gridColor = isDark ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.1)';
 
             if (timelineChart) {
@@ -603,7 +614,7 @@
             if (pieChart) pieChart.destroy();
 
             const isDark = document.documentElement.classList.contains('dark');
-            const textColor = isDark ? '#e5e7eb' : '#1f2937';
+            const textColor = isDark ? 'hsl(0 0% 98%)' : 'hsl(0 0% 9%)';
             const gridColor = isDark ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.1)';
 
             const timelineCtx = document.getElementById('timelineChart').getContext('2d');
